@@ -24,3 +24,18 @@ func TestCheckErrorWithError(t *testing.T) {
 		t.Fatal("Actual and expected error messages do not match")
 	}
 }
+
+func TestCheckErrorWithoutError(t *testing.T) {
+	defer logger.SetDefaultOutput()
+
+	fakeOutput := logger.NewFakeOutput()
+	fakeOutput.Data = errors.New("Error that should not exist")
+
+	logger.SetOutput(fakeOutput)
+
+	CheckError(nil)
+
+	if fakeOutput.Data != nil {
+		t.Fatal("Error raised incorrectly")
+	}
+}
