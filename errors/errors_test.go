@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/code-engine/go-utils/logger"
@@ -29,11 +30,12 @@ func TestCheckErrorWithoutError(t *testing.T) {
 	defer logger.SetDefaultOutput()
 
 	fakeOutput := logger.NewFakeOutput()
-	fakeOutput.Data = errors.New("Error that should not exist")
 
 	logger.SetOutput(fakeOutput)
 
 	CheckError(nil)
+
+	fmt.Println(fakeOutput.Data)
 
 	if fakeOutput.Data != nil {
 		t.Fatal("Error raised incorrectly")
