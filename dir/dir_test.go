@@ -71,3 +71,37 @@ func TestSetPerm(t *testing.T) {
 		t.Fatalf("Permission 0%o does not equal expected 0%o", dir.Perm(), perm)
 	}
 }
+
+func TestJoin(t *testing.T) {
+	dir := New("/path/to")
+
+	expected := "/path/to/dir"
+	actual := dir.Join("dir")
+
+	if expected != actual {
+		t.Fatalf("Expected %s, got %s", expected, actual)
+	}
+}
+
+func TestNewFile(t *testing.T) {
+	testDir, err := filepath.Abs("./test_dir")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dir := New(testDir)
+
+	defer dir.Destroy()
+
+	filename := "foo.txt"
+
+	dir.Create()
+	dir.NewFile(filename, []byte("Some text"), 0700)
+
+	expectedPath := filepath.Join(testDir, filename)
+
+	if _, err := os.Stat(expectedPath); os.IsNotExist(err) {
+		t.Fatalf("File not found at %s", expectedPath)
+	}
+}
