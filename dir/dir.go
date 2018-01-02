@@ -22,7 +22,7 @@ type Dir struct {
 }
 
 func (d Dir) Create() error {
-	if d.exists() {
+	if d.Exists() {
 		message := fmt.Sprintf("Directory %s already exists", d.path)
 		return errors.New(message)
 	}
@@ -55,7 +55,7 @@ func (d Dir) Join(path string) string {
 	return filepath.Join(d.path, path)
 }
 
-func (d Dir) exists() bool {
+func (d Dir) Exists() bool {
 	if _, err := os.Stat(d.path); err == nil {
 		return true
 	}

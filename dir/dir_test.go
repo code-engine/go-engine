@@ -105,3 +105,39 @@ func TestNewFile(t *testing.T) {
 		t.Fatalf("File not found at %s", expectedPath)
 	}
 }
+
+func TestExistsDirExists(t *testing.T) {
+	testDir, err := filepath.Abs("./test_dir")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = os.MkdirAll(testDir, 0700)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer os.Remove(testDir)
+
+	dir := New(testDir)
+
+	if dir.Exists() != true {
+		t.Fatal("Expected true, got false")
+	}
+}
+
+func TestExistsDirDoesNotExist(t *testing.T) {
+	testDir, err := filepath.Abs("./test_dir")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dir := New(testDir)
+
+	if dir.Exists() != false {
+		t.Fatal("Expected false, got true")
+	}
+}
