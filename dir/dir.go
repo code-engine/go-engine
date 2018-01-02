@@ -16,10 +16,8 @@ func New(path string) Dir {
 type Dir struct {
 	path    string
 	perm    int
-	subdirs []SubDir
+	subdirs []Dir
 }
-
-type SubDir struct{}
 
 func (a Dir) Create() error {
 	if a.exists() {
@@ -40,6 +38,10 @@ func (a Dir) Perm() int {
 
 func (a Dir) Path() string {
 	return a.path
+}
+
+func (d Dir) Destroy() error {
+	return os.RemoveAll(d.path)
 }
 
 func (a Dir) exists() bool {
