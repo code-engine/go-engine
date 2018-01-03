@@ -48,24 +48,36 @@ func (d Dir) Destroy() error {
 		return errors.New("No path set")
 	}
 
-	d.DestroyFiles()
+	err := d.DestroyFiles()
+
+	if err != nil {
+		return err
+	}
+
 	return os.Remove(d.Path)
 }
 
-func (d Dir) DestroyFiles() {
+func (d Dir) DestroyFiles() error {
 	files, err := ioutil.ReadDir(d.Path)
 
-	CheckError(err)
+	if err != nil {
+		return err
+	}
 
 	for _, file := range files {
 		if file.IsDir() {
-			return
+			continue
 		}
 
 		path := d.Join(file.Name())
 		err = os.Remove(path)
-		CheckError(err)
+
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
 func (d Dir) NewFile(filename string, data []byte, perm int) error {
