@@ -165,3 +165,45 @@ func TestFileExistsFileExists(t *testing.T) {
 		t.Fatal("Expected true got false")
 	}
 }
+
+func TestDestroyWithSubDirectories(t *testing.T) {
+	dir := NewRelative("./test_dir")
+	subdir := dir.Join("subdir")
+	os.MkdirAll(subdir, 0700)
+
+	if dir.Destroy() == nil {
+		t.Fatal("Expected error but none raised")
+	}
+
+	if !dir.Exists() {
+		t.Fatal("Directory should not have been deleted")
+	}
+
+	os.Remove(subdir)
+	dir.Destroy()
+
+	if dir.Exists() {
+		t.Fatal("Directory should have been cleaned up")
+	}
+}
+
+func TestDestroyFilesWithDirectories(t *testing.T) {
+	dir := NewRelative("./test_dir")
+	subdir := dir.Join("subdir")
+	os.MkdirAll(subdir, 0700)
+
+	if err := dir.DestroyFiles(); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := os.Stat(subdir); os.IsNotExist(err) {
+		t.Fatal("Subdirectory should still exist")
+	}
+
+	os.Remove(subdir)
+	dir.Destroy()
+
+	if dir.Exists() {
+		t.Fatal("Directory should have been cleaned up")
+	}
+}
