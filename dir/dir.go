@@ -62,3 +62,13 @@ func (d Dir) Exists() bool {
 
 	return false
 }
+
+func (d Dir) FileExists(filename string) bool {
+	path := d.Join(filename)
+
+	if _, err := os.Stat(path); err == nil {
+		return true
+	}
+
+	return false
+}

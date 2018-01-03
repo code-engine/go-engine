@@ -1,6 +1,7 @@
 package dir
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -123,7 +124,7 @@ func TestExistsDirExists(t *testing.T) {
 
 	dir := New(testDir)
 
-	if dir.Exists() != true {
+	if !dir.Exists() {
 		t.Fatal("Expected true, got false")
 	}
 }
@@ -137,7 +138,51 @@ func TestExistsDirDoesNotExist(t *testing.T) {
 
 	dir := New(testDir)
 
-	if dir.Exists() != false {
+	if dir.Exists() {
 		t.Fatal("Expected false, got true")
+	}
+}
+
+func TestFileExistsFileDoesNotExist(t *testing.T) {
+	testDir, err := filepath.Abs("./test_dir")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dir := New(testDir)
+	dir.Create()
+
+	defer dir.Destroy()
+
+	if dir.FileExists("testfile.txt") {
+		t.Fatal("Expected false got true")
+	}
+}
+
+func TestFileExistsFileExists(t *testing.T) {
+	testDir, err := filepath.Abs("./test_dir")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dir := New(testDir)
+	dir.Create()
+
+	defer dir.Destroy()
+
+	filename := "testfile.txt"
+
+	path := filepath.Join(testDir, filename)
+
+	err = ioutil.WriteFile(path, []byte(""), 0700)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !dir.FileExists(filename) {
+		t.Fatal("Expected true got false")
 	}
 }
