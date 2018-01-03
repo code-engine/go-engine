@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	. "github.com/code-engine/go-utils/errors"
 )
 
 func New(path string) Dir {
@@ -41,20 +43,29 @@ func (d Dir) Create() error {
 	return os.MkdirAll(d.Path, os.FileMode(d.Perm))
 }
 
-func (d *Dir) SetPerm(perm int) {
-	d.perm = perm
-}
-
-func (d Dir) Perm() int {
-	return d.perm
-}
-
-func (d Dir) Path() string {
-	return d.path
-}
-
 func (d Dir) Destroy() error {
-	return os.RemoveAll(d.path)
+	if d.Path == "" {
+		return errors.New("No path set")
+	}
+
+	d.DestroyFiles()
+	return os.Remove(d.Path)
+}
+
+func (d Dir) DestroyFiles() {
+	files, err := ioutil.ReadDir(d.Path)
+
+	CheckError(err)
+
+	for _, file := range files {
+		if file.IsDir() {
+			return
+		}
+
+		path := d.Join(file.Name())
+		err = os.Remove(path)
+		CheckError(err)
+	}
 }
 
 func (d Dir) NewFile(filename string, data []byte, perm int) error {

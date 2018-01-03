@@ -120,13 +120,7 @@ func TestExistsDirExists(t *testing.T) {
 }
 
 func TestExistsDirDoesNotExist(t *testing.T) {
-	testDir, err := filepath.Abs("./test_dir")
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	dir := New(testDir)
+	dir := NewRelative("./test_dir")
 
 	if dir.Exists() {
 		t.Fatal("Expected false, got true")
@@ -134,13 +128,7 @@ func TestExistsDirDoesNotExist(t *testing.T) {
 }
 
 func TestFileExistsFileDoesNotExist(t *testing.T) {
-	testDir, err := filepath.Abs("./test_dir")
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	dir := New(testDir)
+	dir := NewRelative("./test_dir")
 	dir.Create()
 
 	defer dir.Destroy()
@@ -158,6 +146,7 @@ func TestFileExistsFileExists(t *testing.T) {
 	}
 
 	dir := New(testDir)
+
 	dir.Create()
 
 	defer dir.Destroy()
