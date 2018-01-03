@@ -45,7 +45,7 @@ func TestParse(t *testing.T) {
 
 	yamlString := fmt.Sprintf("---\nname: %s\nage: %d", name, age)
 
-	filename := filepath.Join(tmpDir.Path(), "config.yml")
+	filename := filepath.Join(tmpDir.Path, "config.yml")
 	fileContent := []byte(yamlString)
 
 	ioutil.WriteFile(filename, fileContent, 0700)
@@ -72,7 +72,7 @@ func TestWrite(t *testing.T) {
 
 	defer tmpDir.Destroy()
 
-	filename := filepath.Join(tmpDir.Path(), "config.yml")
+	filename := filepath.Join(tmpDir.Path, "config.yml")
 
 	name := "bar"
 	age := 22

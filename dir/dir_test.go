@@ -12,7 +12,7 @@ func TestAttributeSetting(t *testing.T) {
 
 	dir := New(path)
 
-	if dir.Path() != path {
+	if dir.Path != path {
 		t.Fatal("Paths do not match")
 	}
 }
@@ -63,16 +63,6 @@ func TestCreateDirExists(t *testing.T) {
 	}
 }
 
-func TestSetPerm(t *testing.T) {
-	dir := New("/path/to/dir")
-	perm := 0600
-	dir.SetPerm(perm)
-
-	if dir.Perm() != perm {
-		t.Fatalf("Permission 0%o does not equal expected 0%o", dir.Perm(), perm)
-	}
-}
-
 func TestJoin(t *testing.T) {
 	dir := New("/path/to")
 
@@ -93,11 +83,11 @@ func TestNewFile(t *testing.T) {
 
 	dir := New(testDir)
 
+	dir.Create()
 	defer dir.Destroy()
 
 	filename := "foo.txt"
 
-	dir.Create()
 	dir.NewFile(filename, []byte("Some text"), 0700)
 
 	expectedPath := filepath.Join(testDir, filename)

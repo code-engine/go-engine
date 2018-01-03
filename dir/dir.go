@@ -10,24 +10,35 @@ import (
 
 func New(path string) Dir {
 	return Dir{
-		path: path,
-		perm: 0700,
+		Path: path,
+		Perm: 0700,
+	}
+}
+
+func NewRelative(relativePath string) Dir {
+	absolutePath, err := filepath.Abs(relativePath)
+
+	CheckError(err)
+
+	return Dir{
+		Path: absolutePath,
+		Perm: 0700,
 	}
 }
 
 type Dir struct {
-	path    string
-	perm    int
+	Path    string
+	Perm    int
 	subdirs []Dir
 }
 
 func (d Dir) Create() error {
 	if d.Exists() {
-		message := fmt.Sprintf("Directory %s already exists", d.path)
+		message := fmt.Sprintf("Directory %s already exists", d.Path)
 		return errors.New(message)
 	}
 
-	return os.MkdirAll(d.path, os.FileMode(d.perm))
+	return os.MkdirAll(d.Path, os.FileMode(d.Perm))
 }
 
 func (d *Dir) SetPerm(perm int) {
@@ -52,11 +63,11 @@ func (d Dir) NewFile(filename string, data []byte, perm int) error {
 }
 
 func (d Dir) Join(path string) string {
-	return filepath.Join(d.path, path)
+	return filepath.Join(d.Path, path)
 }
 
 func (d Dir) Exists() bool {
-	if _, err := os.Stat(d.path); err == nil {
+	if _, err := os.Stat(d.Path); err == nil {
 		return true
 	}
 
