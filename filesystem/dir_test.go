@@ -207,3 +207,30 @@ func TestDestroyFilesWithDirectories(t *testing.T) {
 		t.Fatal("Directory should have been cleaned up")
 	}
 }
+
+func TestSortDirectories(t *testing.T) {
+	dirs := []Dir{
+		{Files: []File{}, Path: "/path/d", Priority: 4},
+		{Files: []File{}, Path: "/path/c", Priority: 3},
+		{Files: []File{}, Path: "/path/b", Priority: 2},
+		{Files: []File{}, Path: "/path/a", Priority: 1},
+	}
+
+	for i, dir := range dirs {
+		expectedPriority := 4 - i
+
+		if dir.Priority != expectedPriority {
+			t.Fatalf("Expected a priority of %d got %d", expectedPriority, dir.Priority)
+		}
+	}
+
+	SortDirectories(dirs)
+
+	for i, dir := range dirs {
+		expectedPriority := i + 1
+
+		if dir.Priority != expectedPriority {
+			t.Fatalf("Expected a priority of %d got %d", expectedPriority, dir.Priority)
+		}
+	}
+}

@@ -6,9 +6,16 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 
 	. "github.com/code-engine/go-engine/errors"
 )
+
+func SortDirectories(dirs []Dir) {
+	sort.SliceStable(dirs, func(i, j int) bool {
+		return dirs[i].Priority < dirs[j].Priority
+	})
+}
 
 func NewDir(path string) Dir {
 	return Dir{
