@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-
-	"gopkg.in/yaml.v2"
 )
 
 func Exists(path string) bool {
@@ -43,15 +41,9 @@ func (f File) Create() error {
 		return errors.New(message)
 	}
 
-	marshalled, err := yaml.Marshal(f.Data)
+	dataString := f.Data.(string)
 
-	if err != nil {
-		return err
-	}
-
-	yamlOut := append([]byte("---\n"), marshalled...)
-
-	err = ioutil.WriteFile(f.Path(), yamlOut, os.FileMode(f.Perm))
+	err := ioutil.WriteFile(f.Path(), []byte(dataString), os.FileMode(f.Perm))
 
 	if err != nil {
 		return err

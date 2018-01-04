@@ -2,27 +2,22 @@ package filesystem
 
 import (
 	"io/ioutil"
-	"path/filepath"
 	"testing"
 )
 
-func TestFilePath(t *testing.T) {
-	dirPath := "/path/to/dir"
-	fileName := "test.txt"
-	d := NewDir(dirPath)
-	f := NewFile(fileName, "", &d)
-
-	expectedPath := filepath.Join(dirPath, fileName)
-
-	if f.Path() != expectedPath {
-		t.Fatalf("Expected path to equal %s, got %s", expectedPath, f.Path())
-	}
+type Data struct {
+	Name string
+	Age  int
 }
 
-func TestFileCreate(t *testing.T) {
-	c := "Content"
+func TestYAMLFileCreate(t *testing.T) {
+	data := Data{
+		Name: "test",
+		Age:  1,
+	}
+
 	d := NewRelativeDir("test_dir")
-	f := NewFile("test.txt", c, &d)
+	f := NewYAMLFile("test.yml", data, &d)
 
 	d.Create()
 	defer d.Destroy()
@@ -45,7 +40,7 @@ func TestFileCreate(t *testing.T) {
 
 	fileContentString := string(fileContent)
 
-	expectedFileContent := c
+	expectedFileContent := "---\nname: test\nage: 1\n"
 
 	if fileContentString != expectedFileContent {
 		t.Fatalf("Expected '%s', got '%s'", expectedFileContent, fileContent)
