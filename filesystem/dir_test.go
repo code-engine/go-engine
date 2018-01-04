@@ -3,6 +3,7 @@ package filesystem
 import (
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"testing"
 )
@@ -232,5 +233,23 @@ func TestSortDirectories(t *testing.T) {
 		if dir.Priority != expectedPriority {
 			t.Fatalf("Expected a priority of %d got %d", expectedPriority, dir.Priority)
 		}
+	}
+}
+
+func TestNewHomeRelativeDir(t *testing.T) {
+	dirname := "testing"
+	dir := NewHomeRelativeDir(dirname)
+
+	u, err := user.Current()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	userHomeDir := u.HomeDir
+	expectedPath := filepath.Join(userHomeDir, dirname)
+
+	if dir.Path != expectedPath {
+		t.Fatalf("Expected path to be %s, got %s", expectedPath, dir.Path)
 	}
 }

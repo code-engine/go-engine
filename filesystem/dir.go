@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"sort"
 
@@ -30,11 +31,18 @@ func NewRelativeDir(relativePath string) Dir {
 
 	CheckError(err)
 
-	return Dir{
-		Path:     absolutePath,
-		Perm:     0700,
-		Priority: -1,
-	}
+	return NewDir(absolutePath)
+}
+
+func NewHomeRelativeDir(dirname string) Dir {
+	currentUser, err := user.Current()
+
+	CheckError(err)
+
+	currentUserHomeDir := currentUser.HomeDir
+	path := filepath.Join(currentUserHomeDir, dirname)
+
+	return NewDir(path)
 }
 
 type Dir struct {
