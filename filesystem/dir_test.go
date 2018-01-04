@@ -1,4 +1,4 @@
-package dir
+package filesystem
 
 import (
 	"io/ioutil"
@@ -10,7 +10,7 @@ import (
 func TestAttributeSetting(t *testing.T) {
 	path := "/path/to/app_dir"
 
-	dir := New(path)
+	dir := NewDir(path)
 
 	if dir.Path != path {
 		t.Fatal("Paths do not match")
@@ -26,7 +26,7 @@ func TestCreateDirDoesNotExist(t *testing.T) {
 
 	defer os.Remove(testDir)
 
-	dir := New(testDir)
+	dir := NewDir(testDir)
 	dir.Create()
 
 	fileStat, err := os.Stat(testDir)
@@ -55,7 +55,7 @@ func TestCreateDirExists(t *testing.T) {
 
 	defer os.Remove(testDir)
 
-	dir := New(testDir)
+	dir := NewDir(testDir)
 	err = dir.Create()
 
 	if err == nil {
@@ -64,7 +64,7 @@ func TestCreateDirExists(t *testing.T) {
 }
 
 func TestJoin(t *testing.T) {
-	dir := New("/path/to")
+	dir := NewDir("/path/to")
 
 	expected := "/path/to/dir"
 	actual := dir.Join("dir")
@@ -81,7 +81,7 @@ func TestNewFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	dir := New(testDir)
+	dir := NewDir(testDir)
 
 	dir.Create()
 	defer dir.Destroy()
@@ -112,7 +112,7 @@ func TestExistsDirExists(t *testing.T) {
 
 	defer os.Remove(testDir)
 
-	dir := New(testDir)
+	dir := NewDir(testDir)
 
 	if !dir.Exists() {
 		t.Fatal("Expected true, got false")
@@ -120,7 +120,7 @@ func TestExistsDirExists(t *testing.T) {
 }
 
 func TestExistsDirDoesNotExist(t *testing.T) {
-	dir := NewRelative("./test_dir")
+	dir := NewRelativeDir("./test_dir")
 
 	if dir.Exists() {
 		t.Fatal("Expected false, got true")
@@ -128,7 +128,7 @@ func TestExistsDirDoesNotExist(t *testing.T) {
 }
 
 func TestFileExistsFileDoesNotExist(t *testing.T) {
-	dir := NewRelative("./test_dir")
+	dir := NewRelativeDir("./test_dir")
 	dir.Create()
 
 	defer dir.Destroy()
@@ -145,7 +145,7 @@ func TestFileExistsFileExists(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	dir := New(testDir)
+	dir := NewDir(testDir)
 
 	dir.Create()
 
@@ -167,7 +167,7 @@ func TestFileExistsFileExists(t *testing.T) {
 }
 
 func TestDestroyWithSubDirectories(t *testing.T) {
-	dir := NewRelative("./test_dir")
+	dir := NewRelativeDir("./test_dir")
 	subdir := dir.Join("subdir")
 	os.MkdirAll(subdir, 0700)
 
@@ -188,7 +188,7 @@ func TestDestroyWithSubDirectories(t *testing.T) {
 }
 
 func TestDestroyFilesWithDirectories(t *testing.T) {
-	dir := NewRelative("./test_dir")
+	dir := NewRelativeDir("./test_dir")
 	subdir := dir.Join("subdir")
 	os.MkdirAll(subdir, 0700)
 

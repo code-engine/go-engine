@@ -1,4 +1,4 @@
-package dir
+package filesystem
 
 import (
 	"errors"
@@ -10,28 +10,32 @@ import (
 	. "github.com/code-engine/go-engine/errors"
 )
 
-func New(path string) Dir {
+func NewDir(path string) Dir {
 	return Dir{
-		Path: path,
-		Perm: 0700,
+		Path:     path,
+		Perm:     0700,
+		Priority: -1,
 	}
 }
 
-func NewRelative(relativePath string) Dir {
+func NewRelativeDir(relativePath string) Dir {
 	absolutePath, err := filepath.Abs(relativePath)
 
 	CheckError(err)
 
 	return Dir{
-		Path: absolutePath,
-		Perm: 0700,
+		Path:     absolutePath,
+		Perm:     0700,
+		Priority: -1,
 	}
 }
 
 type Dir struct {
-	Path    string
-	Perm    int
-	subdirs []Dir
+	Path     string
+	Perm     int
+	Priority int
+	Subdirs  []Dir
+	Files    []File
 }
 
 func (d Dir) Create() error {

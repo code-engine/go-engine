@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/code-engine/go-engine/dir"
+	"github.com/code-engine/go-engine/filesystem"
 )
 
 type ParseTest struct {
@@ -14,18 +14,18 @@ type ParseTest struct {
 	Age  int
 }
 
-func createTestDir() (dir.Dir, error) {
+func createTestDir() (filesystem.Dir, error) {
 	path, err := filepath.Abs("./testdir")
 
 	if err != nil {
-		return dir.Dir{}, err
+		return filesystem.Dir{}, err
 	}
 
-	tmpDir := dir.New(path)
+	tmpDir := filesystem.NewDir(path)
 	err = tmpDir.Create()
 
 	if err != nil {
-		return dir.Dir{}, err
+		return filesystem.Dir{}, err
 	}
 
 	return tmpDir, nil
