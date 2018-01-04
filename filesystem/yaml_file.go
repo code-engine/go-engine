@@ -12,16 +12,16 @@ import (
 func NewYAMLFile(name string, data interface{}, parentDir *Dir) YAMLFile {
 	yamlFile := YAMLFile{}
 
-	yamlFile.File.Name = name
-	yamlFile.File.Data = data
-	yamlFile.File.Dir = parentDir
-	yamlFile.File.Perm = 0700
+	yamlFile.TextFile.Name = name
+	yamlFile.TextFile.Data = data
+	yamlFile.TextFile.Dir = parentDir
+	yamlFile.TextFile.Perm = 0700
 
 	return yamlFile
 }
 
 type YAMLFile struct {
-	File
+	TextFile
 }
 
 func (y YAMLFile) Create() error {
