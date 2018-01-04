@@ -18,7 +18,7 @@ func Exists(path string) bool {
 
 // Error if parent does not exist
 
-func NewTextFile(name string, data interface{}, parentDir *Dir) File {
+func NewTextFile(name string, data interface{}, parentDir *Dir) TextFile {
 	return TextFile{
 		Name: name,
 		Data: data,
@@ -58,4 +58,8 @@ func (f TextFile) Path() string {
 
 func (f TextFile) Exists() bool {
 	return Exists(f.Path())
+}
+
+func (f TextFile) Read() ([]byte, error) {
+	return ioutil.ReadFile(f.Path())
 }

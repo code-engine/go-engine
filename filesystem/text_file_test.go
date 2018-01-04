@@ -51,3 +51,34 @@ func TestFileCreate(t *testing.T) {
 		t.Fatalf("Expected '%s', got '%s'", expectedFileContent, fileContent)
 	}
 }
+
+func TestTextFileRead(t *testing.T) {
+	data := "Some content"
+	d := NewRelativeDir("test_dir")
+	f := NewTextFile("test.yml", data, &d)
+
+	d.Create()
+	defer d.Destroy()
+
+	err := f.Create()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !Exists(f.Path()) {
+		t.Fatalf("File expected at %s, but file does not exist", f.Path())
+	}
+
+	content, err := f.Read()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	contentString := string(content)
+
+	if contentString != data {
+		t.Fatalf("Expected %s to equal %s", contentString, data)
+	}
+}
