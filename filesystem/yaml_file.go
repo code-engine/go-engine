@@ -47,3 +47,19 @@ func (y YAMLFile) Create() error {
 
 	return nil
 }
+
+func (y YAMLFile) Read(out interface{}) error {
+	data, err := ioutil.ReadFile(y.Path())
+
+	if err != nil {
+		return err
+	}
+
+	err = yaml.Unmarshal(data, out)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
