@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/code-engine/go-utils/dir"
+	"github.com/code-engine/go-engine/dir"
 )
 
 type ParseTest struct {

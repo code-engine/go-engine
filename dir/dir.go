@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	. "github.com/code-engine/go-utils/errors"
+	. "github.com/code-engine/go-engine/errors"
 )
 
 func New(path string) Dir {

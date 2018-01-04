@@ -1,3 +1,3 @@
-# Go Utils
+# Go Engine
 
-A collection of utility libraries and helpers for Golang.
+Core utility libraries and helpers for Golang.

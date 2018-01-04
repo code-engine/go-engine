@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	. "github.com/code-engine/go-utils/errors"
+	. "github.com/code-engine/go-engine/errors"
 )
 
 type Config struct {
