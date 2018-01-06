@@ -46,3 +46,23 @@ func (p ProcDir) List() ([]int, error) {
 
 	return out, err
 }
+
+func (p ProcDir) Exists(pid int) (bool, error) {
+	list, err := p.List()
+
+	if err != nil {
+		return false, err
+	}
+
+	if len(list) <= 0 {
+		return false, err
+	}
+
+	i := sort.Search(len(list), func(i int) bool { return list[i] == pid })
+
+	if list[i] == pid {
+		return true, nil
+	}
+
+	return false, nil
+}

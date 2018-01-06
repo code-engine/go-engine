@@ -38,3 +38,41 @@ func TestList(t *testing.T) {
 		}
 	}
 }
+
+func TestExistsPIDExists(t *testing.T) {
+	tmpDir := filesystem.NewRelativeDir("./testdir")
+	tmpDir.Create()
+	defer tmpDir.Destroy()
+
+	pd := ProcDir{Path: tmpDir.Path}
+
+	tmpDir.NewFile("1", []byte{}, 0700)
+
+	exists, err := pd.Exists(1)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if exists != true {
+		t.Fatal("Expected true got false")
+	}
+}
+
+func TestExistsPIDDoesNotExists(t *testing.T) {
+	tmpDir := filesystem.NewRelativeDir("./testdir")
+	tmpDir.Create()
+	defer tmpDir.Destroy()
+
+	pd := ProcDir{Path: tmpDir.Path}
+
+	exists, err := pd.Exists(1)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if exists != false {
+		t.Fatal("Expected false got true")
+	}
+}
