@@ -17,25 +17,7 @@ type ProcDir struct {
 	Path string
 }
 
-func (p ProcDir) ProcList() ([]int, error) {
-	out := []int{}
-
-	pdl, err := p.RawList()
-
-	if err != nil {
-		return out, err
-	}
-
-	sort.Ints(pdl)
-
-	for _, prc := range pdl {
-		out = append(out, prc)
-	}
-
-	return out, nil
-}
-
-func (p ProcDir) RawList() ([]int, error) {
+func (p ProcDir) List() ([]int, error) {
 	files, err := ioutil.ReadDir(p.Path)
 
 	if err != nil {
@@ -59,6 +41,8 @@ func (p ProcDir) RawList() ([]int, error) {
 
 		out = append(out, proc)
 	}
+
+	sort.Ints(out)
 
 	return out, err
 }
